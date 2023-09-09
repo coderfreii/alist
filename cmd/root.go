@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/alist-org/alist/v3/util"
 	"os"
 
 	"github.com/alist-org/alist/v3/cmd/flags"
@@ -24,7 +25,7 @@ func Execute() {
 }
 
 func init() {
-	RootCmd.PersistentFlags().StringVar(&flags.DataDir, "data", "data", "data folder")
+	RootCmd.PersistentFlags().StringVar(&flags.DataDir, "data", util.RelativePath("data"), "data folder")
 	RootCmd.PersistentFlags().BoolVar(&flags.Debug, "debug", false, "start with debug mode")
 	RootCmd.PersistentFlags().BoolVar(&flags.NoPrefix, "no-prefix", false, "disable env prefix")
 	RootCmd.PersistentFlags().BoolVar(&flags.Dev, "dev", false, "start with dev mode")
