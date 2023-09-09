@@ -17,6 +17,7 @@ func Proxy(w http.ResponseWriter, r *http.Request, link *model.Link, file model.
 	if link.MFile != nil {
 		defer link.MFile.Close()
 		attachFileName(w, file)
+		extractHeaders(w, link)
 		http.ServeContent(w, r, file.GetName(), file.ModTime(), link.MFile)
 		return nil
 	} else if link.RangeReadCloser != nil {
@@ -76,4 +77,12 @@ func Proxy(w http.ResponseWriter, r *http.Request, link *model.Link, file model.
 func attachFileName(w http.ResponseWriter, file model.Obj) {
 	fileName := file.GetName()
 	w.Header().Set("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"; filename*=UTF-8''%s`, fileName, url.PathEscape(fileName)))
+}
+
+func extractHeaders(w http.ResponseWriter, link *model.Link) {
+	for key, values := range link.Header {
+		for _, value := range values {
+			w.Header().Set(key, value)
+		}
+	}
 }
